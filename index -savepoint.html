@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forex Yatırım Sistemi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:       #080C14;
+            --surface:  #0E1420;
+            --surface2: #131B2A;
+            --border:   rgba(255,255,255,0.07);
+            --border2:  rgba(255,255,255,0.12);
+            --gold:     #C9A84C;
+            --gold-lt:  #E8C87A;
+            --text:     #E8EBF0;
+            --muted:    #6B7A94;
+            --muted2:   #9AA3B4;
+            --green:    #2ECC8A;
+            --green-bg: rgba(46,204,138,0.06);
+            --red:      #E05C5C;
+        }
+
+        html, body {
+            width: 100%; height: 100%;
+            overflow: hidden;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── SLIDER ── */
+        #slider { width: 100%; height: 100vh; overflow: hidden; }
+        #track {
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.75s cubic-bezier(0.86, 0, 0.07, 1);
+            will-change: transform;
+        }
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 44px clamp(20px, 6vw, 80px) 52px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* subtle grid bg */
+        .slide::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+        }
+
+        /* corner accent */
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 280px; height: 280px;
+            background: radial-gradient(circle at top left, rgba(201,168,76,0.06), transparent 65%);
+            pointer-events: none;
+        }
+
+        .inner {
+            width: 100%;
+            max-width: 860px;
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 0.55s ease 0.15s, transform 0.55s ease 0.15s;
+        }
+        .slide.visible .inner { opacity: 1; transform: none; }
+
+        /* scrollable for dense slides */
+        .scroll-wrap {
+            overflow-y: auto;
+            max-height: calc(100vh - 100px);
+            padding-right: 4px;
+            scrollbar-width: none;
+        }
+        .scroll-wrap::-webkit-scrollbar { display: none; }
+
+        /* ── DOT NAV ── */
+        #dots {
+            position: fixed;
+            right: 22px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            z-index: 200;
+        }
+        .dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 99px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .dot.active {
+            background: var(--gold);
+            height: 24px;
+            box-shadow: 0 0 8px rgba(201,168,76,0.5);
+        }
+
+        /* ── BOTTOM NAV ── */
+        #bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 clamp(20px, 5vw, 60px);
+            border-top: 1px solid var(--border);
+            background: rgba(8,12,20,0.85);
+            backdrop-filter: blur(12px);
+            z-index: 200;
+        }
+        .nav-brand {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-btn {
+            width: 32px; height: 32px;
+            border-radius: 6px;
+            border: 1px solid var(--border2);
+            background: var(--surface);
+            color: var(--muted2);
+            font-size: 14px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.18s;
+        }
+        .nav-btn:hover:not(:disabled) {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(201,168,76,0.06);
+        }
+        .nav-btn:disabled { opacity: 0.25; cursor: default; }
+        #counter {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--muted);
+            letter-spacing: 1px;
+            min-width: 36px;
+            text-align: center;
+        }
+        .nav-hint {
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: 0.5px;
+        }
+
+        /* ── TYPOGRAPHY ── */
+        .eyebrow {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .eyebrow::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+        .serif { font-family: 'Inter', sans-serif; }
+
+        h1.display {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+            line-height: 1.08;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 20px;
+            letter-spacing: -0.03em;
+        }
+        h1.display em {
+            font-style: normal;
+            color: var(--gold-lt);
+        }
+
+        h2.section-title {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1.7rem, 3.5vw, 2.6rem);
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 24px;
+        }
+        .card-gold {
+            background: var(--surface);
+            border: 1px solid rgba(201,168,76,0.2);
+            border-radius: 12px;
+            padding: 20px 24px;
+        }
+
+        /* ── NUMBERS ── */
+        .big-number {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: clamp(5rem, 12vw, 8rem);
+            line-height: 1;
+            color: var(--gold-lt);
+            letter-spacing: -4px;
+        }
+
+        /* ── DIVIDER ── */
+        .h-rule {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 20px 0;
+        }
+
+        /* ── STATUS BADGE ── */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .badge-green {
+            background: var(--green-bg);
+            border: 1px solid rgba(46,204,138,0.2);
+            color: var(--green);
+        }
+        .badge-amber {
+            background: rgba(201,168,76,0.07);
+            border: 1px solid rgba(201,168,76,0.22);
+            color: var(--gold-lt);
+        }
+        .badge-muted {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            color: var(--muted2);
+        }
+        .dot-pulse {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: dpulse 1.4s ease infinite;
+        }
+        @keyframes dpulse {
+            0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+        }
+
+        /* ── STEP ROWS ── */
+        .step-row {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            position: relative;
+        }
+        .step-num {
+            flex-shrink: 0;
+            width: 36px; height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--border2);
+            background: var(--surface2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gold);
+            position: relative;
+            z-index: 1;
+        }
+        .step-connector {
+            position: absolute;
+            left: 17px;
+            top: 36px;
+            bottom: -16px;
+            width: 1px;
+            background: linear-gradient(var(--border2), transparent);
+        }
+
+        /* ── PIE SVG ── */
+        .pie-wrap { position: relative; display: inline-block; }
+        .pie-center {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column;
+        }
+
+        /* ── GRID LAYOUTS ── */
+        .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+
+        @media (max-width: 560px) {
+            .g2 { grid-template-columns: 1fr; }
+            .g3 { grid-template-columns: 1fr; }
+            .pie-legend-grid { grid-template-columns: 1fr !important; }
+            .scenario-grid { grid-template-columns: 1fr !important; }
+            .scenario-arrow { display: none; }
+        }
+
+        /* ── TOP HEADER BAR ── */
+        #top-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 clamp(20px, 5vw, 60px);
+            border-bottom: 1px solid var(--border);
+            background: rgba(8,12,20,0.92);
+            backdrop-filter: blur(16px);
+            z-index: 200;
+        }
+        .top-bar-title {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+        .top-bar-slide-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--muted);
+            transition: opacity 0.3s;
+        }
+        .logomark {
+            width: 48px; height: 48px;
+            border: 1px solid rgba(201,168,76,0.3);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+            background: rgba(201,168,76,0.06);
+            margin-bottom: 28px;
+        }
+
+        /* ── NETWORK TREE ── */
+        .tree-node {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            padding: 5px 14px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        .tree-line { background: var(--border2); }
+
+        /* ── PROGRESS BAR ── */
+        .pbar-track {
+            height: 3px;
+            background: var(--border);
+            border-radius: 99px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+        .pbar-fill {
+            height: 100%;
+            border-radius: 99px;
+            background: var(--gold);
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOP HEADER BAR -->
+<div id="top-bar">
+    <span class="top-bar-title">Expert Advisor ile Altın Ticareti Yap</span>
+    <span class="top-bar-slide-label" id="slide-label"></span>
+</div>
+
+<!-- DOT NAV -->
+<nav id="dots"></nav>
+
+<!-- BOTTOM NAV BAR -->
+<div id="bottom-nav">
+    <span class="nav-brand">EA Gold Trading</span>
+    <div class="nav-center">
+        <button class="nav-btn" id="btn-prev">↑</button>
+        <span id="counter">1 / 7</span>
+        <button class="nav-btn" id="btn-next">↓</button>
+    </div>
+    <span class="nav-hint">↑ ↓ veya kaydır</span>
+</div>
+
+<!-- SLIDER -->
+<div id="slider">
+<div id="track">
+
+<!-- ══════════════════════════════════════════
+     SLIDE 1 — KAPAK
+══════════════════════════════════════════ -->
+<section class="slide">
+    <div class="inner" style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center">
+        <!-- Sol -->
+        <div>
+            <div class="logomark">◈</div>
+            <div class="eyebrow">Expert Advisor İşlem Teknolojisi</div>
+            <h1 class="display">
+                Geleceğin<br>
+                <em>Finansal Özgürlüğü</em>
+            </h1>
+            <p style="color:var(--muted2);font-size:14px;line-height:1.7;margin-bottom:0;max-width:380px">
+                Gelişmiş Expert Advisor (EA) altyapımız, haber akışlarını ve makro verileri anlık analiz ederek yüksek hızda giriş-çıkış stratejileriyle sermayenizi kurumsal bir disiplinle yönetir.
+            </p>
+        </div>
+        <!-- Sağ — metrik panel -->
+        <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;display:flex;justify-content:space-between;align-items:center">
+                <div>
+                    <p style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Ortalama Haftalık Getiri</p>
+                    <p style="font-size:2rem;font-weight:700;color:var(--gold-lt)">~ %4</p>
+                </div>
+                <div style="text-align:right">
+                    <p style="font-size:10px;color:var(--muted);margin-bottom:4px">Ortalama / Haftalık</p>
+                    <p style="font-size:12px;color:var(--green);font-weight:600">▲ İstikrarlı</p>
+                </div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;display:flex;justify-content:space-between;align-items:center">
+                <div>
+                    <p style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Çalışma Süresi</p>
+                    <p style="font-size:2rem;font-weight:700;color:var(--text)">5 / 24</p>
+                </div>
+                <div style="text-align:right">
+                    <p style="font-size:10px;color:var(--muted);margin-bottom:4px">Kesintisiz</p>
+                    <p style="font-size:12px;color:var(--muted2);font-weight:600">Otomatik</p>
+                </div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;display:flex;justify-content:space-between;align-items:center">
+                <div>
+                    <p style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Referans Bonusu</p>
+                    <p style="font-size:2rem;font-weight:700;color:var(--text)">%4</p>
+                </div>
+                <div style="text-align:right">
+                    <p style="font-size:10px;color:var(--muted);margin-bottom:4px">Tek seferlik</p>
+                    <p style="font-size:12px;color:var(--muted2);font-weight:600">30 gün kilit</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 2 — HAFTALIK KAZANÇ
+══════════════════════════════════════════ -->
+<section class="slide">
+    <div class="inner">
+        <div class="scroll-wrap">
+            <div class="eyebrow">Getiri Modeli</div>
+            <h2 class="section-title">Ortalama %8 Performans</h2>
+            <p style="color:var(--muted2);font-size:14px;margin-bottom:28px">Expert Advisor, piyasa verilerini analiz ederek haftalık ortalama %8 brüt performans üretir. Bu performansın %6'sı şeffaf bir şekilde yatırımcı ve referans ağına dağıtılır.</p>
+
+            <!-- Ana kart -->
+            <div style="background:var(--surface);border:1px solid rgba(201,168,76,0.18);border-radius:14px;padding:32px 36px;margin-bottom:20px;display:flex;align-items:center;gap:40px;flex-wrap:wrap">
+                <div>
+                    <p style="font-size:12px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Net Yatırımcı Kazancı</p>
+                    <div class="big-number">%4</div>
+                    <p style="color:var(--muted);font-size:13px;margin-top:6px">Haftalık · Net · Otomatik</p>
+                </div>
+                <div style="flex:1;min-width:200px">
+                    <div class="pbar-track" style="margin-bottom:4px">
+                        <div class="pbar-fill" style="width:50%"></div>
+                    </div>
+                    <p style="font-size:11px;color:var(--muted);margin-bottom:16px">Brüt %8 performans üzerinden dağıtım</p>
+                    <div class="badge badge-green" style="margin-bottom:8px">
+                        <span class="dot-pulse"></span>
+                        EA strateji istikrarı ile optimize
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hesaplama tablosu -->
+            <div class="g3">
+                <div class="card">
+                    <p style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">1.000 $</p>
+                    <p style="font-size:1.6rem;font-weight:700;color:var(--green)">+ 40 $</p>
+                    <p style="font-size:11px;color:var(--muted);margin-top:3px">haftalık kazanç</p>
+                </div>
+                <div class="card-gold">
+                    <p style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">5.000 $</p>
+                    <p style="font-size:1.6rem;font-weight:700;color:var(--gold-lt)">+ 200 $</p>
+                    <p style="font-size:11px;color:var(--muted);margin-top:3px">haftalık kazanç</p>
+                </div>
+                <div class="card">
+                    <p style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">10.000 $</p>
+                    <p style="font-size:1.6rem;font-weight:700;color:var(--green)">+ 400 $</p>
+                    <p style="font-size:11px;color:var(--muted);margin-top:3px">haftalık kazanç</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 3 — REFERANS SİSTEMİ
+══════════════════════════════════════════ -->
+<section class="slide">
+    <div class="inner">
+        <div class="scroll-wrap">
+            <div class="eyebrow">Referans Sistemi</div>
+            <h2 class="section-title">Stratejik Referans Ağı ve<br>Teşvik Modeli</h2>
+            <p style="color:var(--muted2);font-size:14px;margin-bottom:24px">Ağınıza dahil ettiğiniz her yeni yatırımcının sisteme sunduğu ilk sermaye girişi üzerinden, ekosisteme katkı payı olarak %4 oranında tek seferlik bir referans teşviki kazanırsınız.</p>
+
+            <!-- Senaryo -->
+            <div class="card" style="margin-bottom:14px">
+                <p style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:16px">Örnek Senaryo</p>
+                <div class="scenario-grid" style="display:grid;grid-template-columns:1fr 32px 1fr;gap:12px;align-items:center">
+                    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px">
+                        <p style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Arkadaşın Yatırımı</p>
+                        <p style="font-size:1.6rem;font-weight:700;color:var(--text)">10.000 <span style="font-size:1rem;color:var(--muted)">$</span></p>
+                    </div>
+                    <div class="scenario-arrow" style="text-align:center;color:var(--muted);font-size:18px">→</div>
+                    <div style="background:var(--surface2);border:1px solid rgba(201,168,76,0.2);border-radius:8px;padding:16px">
+                        <p style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Senin Referans Kazancın</p>
+                        <p style="font-size:1.6rem;font-weight:700;color:var(--gold-lt)">400 <span style="font-size:1rem;color:var(--muted)">$</span></p>
+                        <p style="font-size:11px;color:var(--muted);margin-top:3px">Yatırımın %4'ü — tek seferlik</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Güvenlik kilidi -->
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+                    <div style="width:30px;height:30px;border-radius:6px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);display:flex;align-items:center;justify-content:center;font-size:14px">⏸</div>
+                    <div>
+                        <p style="font-size:13px;font-weight:600;color:var(--text)">Sermaye Doğrulama ve Güvenlik Protokolü</p>
+                        <p style="font-size:11px;color:var(--muted)">Teşvik ödemeleri için uygulanan likidite koruma süreci</p>
+                    </div>
+                </div>
+                <hr class="h-rule" style="margin:14px 0">
+                <p style="font-size:13px;color:var(--muted2);line-height:1.65">
+                    Hakedilen bu teşvik tutarı, yatırımın sistem içerisindeki istikrarını doğrulamak ve platformun likidite dengesini korumak amacıyla <strong style="color:var(--text)">30 günlük</strong> bir provizyon sürecine tabi tutulur. Bu uygulama, suistimalleri önleyerek tüm paydaşlar için <strong style="color:var(--gold-lt)">sürdürülebilir ve güvenli</strong> bir büyüme zemini oluşturur.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 4 — İŞLEM AKIŞI
+══════════════════════════════════════════ -->
+<section class="slide">
+    <div class="inner">
+        <div class="scroll-wrap">
+            <div class="eyebrow">İşlem Akışı</div>
+            <h2 class="section-title">Nasıl Çalışır?</h2>
+            <p style="color:var(--muted2);font-size:14px;margin-bottom:28px">Referans kazancınız üç adımda işlenir.</p>
+
+            <div style="display:flex;flex-direction:column;gap:0">
+
+                <!-- Adım 1 -->
+                <div class="step-row" style="margin-bottom:0;padding-bottom:20px">
+                    <div style="display:flex;flex-direction:column;align-items:center">
+                        <div class="step-num">01</div>
+                        <div class="step-connector"></div>
+                    </div>
+                    <div class="card" style="flex:1;margin-top:0">
+                        <p style="font-size:13px;font-weight:600;margin-bottom:4px">Arkadaşın Yatırım Yapar</p>
+                        <p style="font-size:13px;color:var(--muted2);line-height:1.6">Referans bağlantınla sisteme katılan arkadaşın yatırımını tamamlar. Referans ilişkisi otomatik kaydedilir.</p>
+                    </div>
+                </div>
+
+                <!-- Adım 2 -->
+                <div class="step-row" style="padding-bottom:20px">
+                    <div style="display:flex;flex-direction:column;align-items:center">
+                        <div class="step-num">02</div>
+                        <div class="step-connector"></div>
+                    </div>
+                    <div class="card" style="flex:1">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+                            <p style="font-size:13px;font-weight:600">Kazancın Sisteme Rezerve Edilir</p>
+                            <span class="badge badge-muted">
+                                <span class="dot-pulse"></span>
+                                Beklemede · 400 $
+                            </span>
+                        </div>
+                        <p style="font-size:13px;color:var(--muted2);line-height:1.6">400 $ panelinizde görünür ancak 30 günlük doğrulama sürecine girer.</p>
+                    </div>
+                </div>
+
+                <!-- Adım 3 -->
+                <div class="step-row">
+                    <div style="display:flex;flex-direction:column;align-items:center">
+                        <div class="step-num" style="border-color:rgba(46,204,138,0.3);color:var(--green)">03</div>
+                    </div>
+                    <div class="card" style="flex:1;border-color:rgba(46,204,138,0.15)">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+                            <p style="font-size:13px;font-weight:600">Ödeme Gerçekleşir</p>
+                            <span class="badge badge-green">
+                                Onaylandı · 400 $
+                            </span>
+                        </div>
+                        <p style="font-size:13px;color:var(--muted2);line-height:1.6">30. gün sonunda yatırım doğrulanır ve 400 $ anında cüzdanınıza aktarılır.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:10px;margin-top:20px;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px">
+                <span style="font-size:14px">◎</span>
+                <p style="font-size:12px;color:var(--muted2)">Amaç: Hem sizin hem de sistemin güvenliğini korumak.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 5 — DERİNLİK KAZANÇLARI
+══════════════════════════════════════════ -->
+<section class="slide">
+    <div class="inner">
+        <div class="scroll-wrap">
+            <div class="eyebrow">Pasif Gelir Ağı</div>
+            <h2 class="section-title">Derinlik Kazançları</h2>
+            <p style="color:var(--muted2);font-size:14px;margin-bottom:24px">Ağınız büyüdükçe haftalık pasif geliriniz de büyür.</p>
+
+            <!-- Kural açıklaması -->
+            <div style="background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start">
+                <span style="color:var(--gold);font-size:14px;margin-top:1px">◈</span>
+                <p style="font-size:13px;color:var(--muted2);line-height:1.65">
+                    Her kişi, davet ettiği kişilerin <strong style="color:var(--text)">sadece 1 zincirinden</strong> kazanır.
+                    Arkadaşın kaç kişi getirirse getirsin, sen yalnızca <strong style="color:var(--text)">o arkadaşın getirdiği 1 kişiden</strong> %1 kazanırsın.
+                </p>
+            </div>
+
+            <div class="g2" style="margin-bottom:16px">
+                <!-- 1. Derinlik -->
+                <div class="card-gold" style="padding:22px">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+                        <div style="width:6px;height:6px;border-radius:50%;background:var(--gold)"></div>
+                        <p style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold)">1. Derinlik</p>
+                    </div>
+                    <p style="font-size:2rem;font-weight:700;color:var(--gold-lt);margin-bottom:4px">%1</p>
+                    <p style="font-size:13px;color:var(--muted2);margin-bottom:14px">Doğrudan davet ettiğin kişinin haftalık <strong style="color:var(--text)">%4 kârından</strong> %1'i</p>
+                    <hr class="h-rule" style="margin:12px 0">
+                    <p style="font-size:12px;color:var(--muted)">B → 10.000 $ yatırım · Robot %6 yaptı</p>
+                    <p style="font-size:13px;font-weight:600;color:var(--gold-lt);margin-top:4px">B alır: 400 $ · Sen alırsın: 100 $</p>
+                </div>
+
+                <!-- 2. Derinlik -->
+                <div class="card" style="padding:22px">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+                        <div style="width:6px;height:6px;border-radius:50%;background:var(--muted2)"></div>
+                        <p style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">2. Derinlik</p>
+                    </div>
+                    <p style="font-size:2rem;font-weight:700;color:var(--text);margin-bottom:4px">%1</p>
+                    <p style="font-size:13px;color:var(--muted2);margin-bottom:14px">B'nin getirdiği <strong style="color:var(--text)">1 kişinin</strong> haftalık %4 kârından %1'i</p>
+                    <hr class="h-rule" style="margin:12px 0">
+                    <p style="font-size:12px;color:var(--muted)">C → 10.000 $ yatırım · B getirdi</p>
+                    <p style="font-size:13px;font-weight:600;color:var(--text);margin-top:4px">B alır: 100 $ · Sen de alırsın: 100 $</p>
+                </div>
+            </div>
+
+            <!-- Kâr Dağılımı (pasta + legend) -->
+            <div class="card" style="padding:20px 24px">
+                <p style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:16px">Kâr Dağılımı — Haftalık %8</p>
+                <div style="display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center">
+                    <!-- PIE -->
+                    <div style="position:relative;flex-shrink:0">
+                        <svg viewBox="0 0 200 200" style="width:110px;height:110px;transform:rotate(-90deg);display:block">
+                            <!-- Toplam 439.6 (2*PI*70) -->
+                            <!-- Yatırımcı %4 (%50) -->
+                            <circle r="70" cx="100" cy="100" fill="transparent" stroke="#2ECC8A" stroke-width="32" stroke-dasharray="219.8 439.6" stroke-dashoffset="0"/>
+                            <!-- Sponsor %1 (%12.5) -->
+                            <circle r="70" cx="100" cy="100" fill="transparent" stroke="#C9A84C" stroke-width="32" stroke-dasharray="54.95 439.6" stroke-dashoffset="-219.8"/>
+                            <!-- Üst Sponsor %1 (%12.5) -->
+                            <circle r="70" cx="100" cy="100" fill="transparent" stroke="#6B7A94" stroke-width="32" stroke-dasharray="54.95 439.6" stroke-dashoffset="-274.75"/>
+                            <!-- Master %2 (%25) -->
+                            <circle r="70" cx="100" cy="100" fill="transparent" stroke="#1E2D45" stroke-width="32" stroke-dasharray="109.9 439.6" stroke-dashoffset="-329.7"/>
+                        </svg>
+                        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column">
+                            <p style="font-size:1rem;font-weight:700;color:var(--text)">%8</p>
+                            <p style="font-size:9px;color:var(--muted)">Toplam</p>
+                        </div>
+                    </div>
+                    <!-- Legend -->
+                    <div style="display:flex;flex-direction:column;gap:7px">
+                        <div style="display:flex;align-items:center;gap:8px">
+                            <div style="width:3px;height:28px;border-radius:2px;background:#2ECC8A;flex-shrink:0"></div>
+                            <div style="flex:1"><p style="font-size:12px;font-weight:600">Yatırımcı (Sen)</p><p style="font-size:11px;color:var(--muted)">Net kârın</p></div>
+                            <p style="font-size:1rem;font-weight:700;color:#2ECC8A">%4</p>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px">
+                            <div style="width:3px;height:28px;border-radius:2px;background:var(--gold);flex-shrink:0"></div>
+                            <div style="flex:1"><p style="font-size:12px;font-weight:600">Sponsor</p><p style="font-size:11px;color:var(--muted)">1. derinlik referans</p></div>
+                            <p style="font-size:1rem;font-weight:700;color:var(--gold-lt)">%1</p>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px">
+                            <div style="width:3px;height:28px;border-radius:2px;background:var(--muted);flex-shrink:0"></div>
+                            <div style="flex:1"><p style="font-size:12px;font-weight:600">Üst Sponsor</p><p style="font-size:11px;color:var(--muted)">2. derinlik referans</p></div>
+                            <p style="font-size:1rem;font-weight:700;color:var(--muted2)">%1</p>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px">
+                            <div style="width:3px;height:28px;border-radius:2px;background:#1E2D45;border:1px solid var(--border2);flex-shrink:0"></div>
+                            <div style="flex:1"><p style="font-size:12px;font-weight:600">Master — Altyapı</p><p style="font-size:11px;color:var(--muted)">EA Yazılım & İşletim</p></div>
+                            <p style="font-size:1rem;font-weight:700;color:var(--muted2)">%2</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 6 — DETAYLI AĞ ŞEMASI
+══════════════════════════════════════════ -->
+<section class="slide">
+    <div class="inner" style="max-width:960px">
+        <div class="scroll-wrap">
+            <div class="eyebrow">Referans Ağı</div>
+            <h2 class="section-title" style="margin-bottom:6px">Gelir Ağı Yapısı</h2>
+            <p style="color:var(--muted2);font-size:14px;margin-bottom:20px">
+                Kim getirirse o kazanır. Her kişi kendi zincirinden — <strong style="color:var(--text)">1. ve 2. halkadan</strong> — %1 pasif alır.
+            </p>
+
+            <div class="card" style="padding:24px 20px;overflow:hidden">
+                <svg viewBox="0 0 820 400" style="width:100%;height:auto;display:block" preserveAspectRatio="xMidYMid meet">
+
+                    <!-- ══ ARKA PLAN KATMANBÖLÜCÜLERİ ══ -->
+                    <rect x="0" y="0" width="820" height="400" fill="none"/>
+                    <!-- Katman şeritleri -->
+                    <rect x="0" y="0"   width="820" height="88"  fill="rgba(201,168,76,0.025)" rx="0"/>
+                    <rect x="0" y="88"  width="820" height="110" fill="rgba(255,255,255,0.012)" rx="0"/>
+                    <rect x="0" y="198" width="820" height="112" fill="rgba(255,255,255,0.008)" rx="0"/>
+                    <rect x="0" y="310" width="820" height="90"  fill="rgba(255,255,255,0.004)" rx="0"/>
+
+                    <!-- Katman etiketleri -->
+                    <text x="8" y="20" fill="#C9A84C" font-size="8.5" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1.5" opacity="0.8">SEN</text>
+                    <text x="8" y="112" fill="#6B7A94" font-size="8" font-family="Inter,sans-serif" font-weight="600" letter-spacing="1.2">1. DERİNLİK</text>
+                    <text x="8" y="222" fill="#6B7A94" font-size="8" font-family="Inter,sans-serif" font-weight="600" letter-spacing="1.2">2. DERİNLİK</text>
+                    <text x="8" y="332" fill="#374151" font-size="8" font-family="Inter,sans-serif" font-weight="600" letter-spacing="1.2">3. DERİNLİK···</text>
+
+                    <!-- Ayraç çizgileri -->
+                    <line x1="0" y1="88"  x2="820" y2="88"  stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                    <line x1="0" y1="198" x2="820" y2="198" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                    <line x1="0" y1="310" x2="820" y2="310" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+
+                    <!-- ══ BAĞLANTI ÇİZGİLERİ ══ -->
+
+                    <!-- SEN → A (davet etti) -->
+                    <line x1="280" y1="60" x2="200" y2="130" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+                    <!-- SEN → B (davet etti) -->
+                    <line x1="300" y1="60" x2="440" y2="130" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+                    <!-- SEN → C (davet etti) -->
+                    <line x1="310" y1="60" x2="650" y2="130" stroke="rgba(201,168,76,0.3)" stroke-width="1.5" stroke-dasharray="4 3"/>
+
+                    <!-- A → A1 (A'nın getirdiği 1 kişi — SEN bu kişiden kazanır) -->
+                    <line x1="200" y1="170" x2="200" y2="230" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
+                    <!-- A → A2, A3 (A'nın diğer davetleri — SEN bunlardan KAZANMAZ) -->
+                    <line x1="190" y1="170" x2="120" y2="230" stroke="rgba(107,122,148,0.15)" stroke-width="1" stroke-dasharray="3 3"/>
+                    <line x1="210" y1="170" x2="310" y2="230" stroke="rgba(107,122,148,0.15)" stroke-width="1" stroke-dasharray="3 3"/>
+
+                    <!-- B → B1 (B'nin getirdiği 1 kişi — SEN bu kişiden kazanır) -->
+                    <line x1="440" y1="170" x2="440" y2="230" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
+                    <!-- B → B2 (SEN bundan KAZANMAZ) -->
+                    <line x1="430" y1="170" x2="560" y2="230" stroke="rgba(107,122,148,0.15)" stroke-width="1" stroke-dasharray="3 3"/>
+
+                    <!-- C → C1 (C'nin getirdiği kişi — SEN bu kişiden kazanır) -->
+                    <line x1="650" y1="170" x2="700" y2="230" stroke="rgba(201,168,76,0.3)" stroke-width="1.5" stroke-dasharray="4 3"/>
+
+                    <!-- A1 → üçüncü katman (soluk) -->
+                    <line x1="200" y1="268" x2="200" y2="322" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+                    <!-- B1 → üçüncü katman -->
+                    <line x1="440" y1="268" x2="440" y2="322" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+                    <!-- ══ SEN (kök) — sola taşındı ══ -->
+                    <rect x="8" y="18" width="160" height="42" rx="8"
+                          fill="rgba(201,168,76,0.12)" stroke="#C9A84C" stroke-width="1.5"/>
+                    <text x="88" y="35" text-anchor="middle" fill="#E8C87A" font-size="12" font-family="Inter,sans-serif" font-weight="700">SEN — A</text>
+                    <text x="88" y="50" text-anchor="middle" fill="#9AA3B4" font-size="9" font-family="Inter,sans-serif">10.000 $ yatırım</text>
+                    <!-- badge -->
+                    <rect x="8" y="63" width="160" height="16" rx="4" fill="rgba(46,204,138,0.08)" stroke="rgba(46,204,138,0.2)" stroke-width="1"/>
+                    <text x="88" y="74" text-anchor="middle" fill="#2ECC8A" font-size="8.5" font-family="Inter,sans-serif" font-weight="600">%4 → 400 $/hafta kârın</text>
+
+                    <!-- ══ KAZANÇ HESAPLAMA PANELİ — geniş, sağda ══ -->
+                    <rect x="180" y="8" width="636" height="90" rx="8"
+                          fill="rgba(8,12,20,0.8)" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+
+                    <!-- Başlık -->
+                    <text x="196" y="24" fill="#C9A84C" font-size="8.5" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1.5">BU HAFTA KAZANCIN — EA %8 Yaptı</text>
+                    <line x1="180" y1="30" x2="816" y2="30" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+                    <!-- ── KOL 1: Kendi kârı + B pasif ── -->
+                    <rect x="190" y="36" width="7" height="7" rx="1.5" fill="#2ECC8A"/>
+                    <text x="202" y="44" fill="#9AA3B4" font-size="9" font-family="Inter,sans-serif" font-weight="600">Kendi kârın</text>
+                    <text x="202" y="55" fill="#6B7A94" font-size="8" font-family="Inter,sans-serif">10.000$ × %4</text>
+                    <text x="290" y="45" fill="#2ECC8A" font-size="10" font-family="Inter,sans-serif" font-weight="700">= 400 $</text>
+
+                    <rect x="190" y="63" width="7" height="7" rx="1.5" fill="#C9A84C"/>
+                    <text x="202" y="71" fill="#9AA3B4" font-size="9" font-family="Inter,sans-serif" font-weight="600">B'den pasif  (1. derinlik)</text>
+                    <text x="202" y="82" fill="#6B7A94" font-size="8" font-family="Inter,sans-serif">10.000$ × %4 × %1</text>
+                    <text x="290" y="72" fill="#C9A84C" font-size="10" font-family="Inter,sans-serif" font-weight="700">= 100 $</text>
+
+                    <!-- Kolon ayraç 1 -->
+                    <line x1="340" y1="32" x2="340" y2="90" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+                    <!-- ── KOL 2: C pasif + D pasif ── -->
+                    <rect x="350" y="36" width="7" height="7" rx="1.5" fill="#C9A84C"/>
+                    <text x="362" y="44" fill="#9AA3B4" font-size="9" font-family="Inter,sans-serif" font-weight="600">C'den pasif  (1. derinlik)</text>
+                    <text x="362" y="55" fill="#6B7A94" font-size="8" font-family="Inter,sans-serif">5.000$ × %4 × %1</text>
+                    <text x="456" y="45" fill="#C9A84C" font-size="10" font-family="Inter,sans-serif" font-weight="700">= 50 $</text>
+
+                    <rect x="350" y="63" width="7" height="7" rx="1.5" fill="#C9A84C"/>
+                    <text x="362" y="71" fill="#9AA3B4" font-size="9" font-family="Inter,sans-serif" font-weight="600">D'den pasif  (1. derinlik)</text>
+                    <text x="362" y="82" fill="#6B7A94" font-size="8" font-family="Inter,sans-serif">8.000$ × %4 × %1</text>
+                    <text x="456" y="72" fill="#C9A84C" font-size="10" font-family="Inter,sans-serif" font-weight="700">= 80 $</text>
+
+                    <!-- Kolon ayraç 2 -->
+                    <line x1="510" y1="32" x2="510" y2="90" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+                    <!-- ── KOL 3: B1 + C1 pasif ── -->
+                    <rect x="520" y="36" width="7" height="7" rx="1.5" fill="#6B7A94"/>
+                    <text x="532" y="44" fill="#9AA3B4" font-size="9" font-family="Inter,sans-serif" font-weight="600">B1'den pasif  (2. derinlik)</text>
+                    <text x="532" y="55" fill="#6B7A94" font-size="8" font-family="Inter,sans-serif">6.000$ × %4 × %1</text>
+                    <text x="628" y="45" fill="#9AA3B4" font-size="10" font-family="Inter,sans-serif" font-weight="700">= 60 $</text>
+
+                    <rect x="520" y="63" width="7" height="7" rx="1.5" fill="#6B7A94"/>
+                    <text x="532" y="71" fill="#9AA3B4" font-size="9" font-family="Inter,sans-serif" font-weight="600">C1'den pasif  (2. derinlik)</text>
+                    <text x="532" y="82" fill="#6B7A94" font-size="8" font-family="Inter,sans-serif">4.000$ × %4 × %1</text>
+                    <text x="628" y="72" fill="#9AA3B4" font-size="10" font-family="Inter,sans-serif" font-weight="700">= 40 $</text>
+
+                    <!-- Kolon ayraç 3 -->
+                    <line x1="650" y1="32" x2="650" y2="90" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+                    <!-- ── TOPLAM ── -->
+                    <rect x="651" y="8" width="165" height="90" rx="0"
+                          fill="rgba(201,168,76,0.08)" stroke="none"/>
+                    <text x="734" y="48" text-anchor="middle" fill="#6B7A94" font-size="9" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">TOPLAM</text>
+                    <text x="734" y="68" text-anchor="middle" fill="#E8C87A" font-size="18" font-family="Inter,sans-serif" font-weight="700">730 $</text>
+                    <text x="734" y="82" text-anchor="middle" fill="#6B7A94" font-size="8" font-family="Inter,sans-serif">bu hafta</text>
+
+                    <!-- Master notu (panel altı) -->
+                    <text x="182" y="103" fill="#374151" font-size="7.5" font-family="Inter,sans-serif">* Kalan %2 → Master (EA Geliştiricisi): 10.000$ × %2 = 200 $   |   Toplam dağıtım: %4 (yatırımcı) + %2 (Master) + %1 (Sponsor) + %1 (Üst Sponsor) = %8</text>
+
+                    <!-- ══ 1. Derinlik: B, C, D ══ -->
+
+                    <!-- B — Sen davet ettin (tam çizgi) -->
+                    <rect x="110" y="130" width="180" height="40" rx="7"
+                          fill="rgba(201,168,76,0.08)" stroke="rgba(201,168,76,0.35)" stroke-width="1.2"/>
+                    <text x="200" y="147" text-anchor="middle" fill="#E8EBF0" font-size="11" font-family="Inter,sans-serif" font-weight="600">B — Arkadaşın</text>
+                    <text x="200" y="161" text-anchor="middle" fill="#6B7A94" font-size="8.5" font-family="Inter,sans-serif">10.000 $ · Kâr: 400 $/hafta</text>
+                    <!-- Kazanç etiketi -->
+                    <rect x="110" y="173" width="180" height="15" rx="4" fill="rgba(201,168,76,0.07)" stroke="rgba(201,168,76,0.18)" stroke-width="1"/>
+                    <text x="200" y="184" text-anchor="middle" fill="#C9A84C" font-size="8" font-family="Inter,sans-serif">Sen ← 100 $/hafta (%1 pasif)</text>
+
+                    <!-- C — Sen davet ettin -->
+                    <rect x="350" y="130" width="180" height="40" rx="7"
+                          fill="rgba(201,168,76,0.08)" stroke="rgba(201,168,76,0.35)" stroke-width="1.2"/>
+                    <text x="440" y="147" text-anchor="middle" fill="#E8EBF0" font-size="11" font-family="Inter,sans-serif" font-weight="600">C — Arkadaşın</text>
+                    <text x="440" y="161" text-anchor="middle" fill="#6B7A94" font-size="8.5" font-family="Inter,sans-serif">5.000 $ · Kâr: 200 $/hafta</text>
+                    <rect x="350" y="173" width="180" height="15" rx="4" fill="rgba(201,168,76,0.07)" stroke="rgba(201,168,76,0.18)" stroke-width="1"/>
+                    <text x="440" y="184" text-anchor="middle" fill="#C9A84C" font-size="8" font-family="Inter,sans-serif">Sen ← 50 $/hafta (%1 pasif)</text>
+
+                    <!-- D — Sen davet ettin (kesikli = daha az aktif) -->
+                    <rect x="580" y="130" width="160" height="40" rx="7"
+                          fill="rgba(201,168,76,0.04)" stroke="rgba(201,168,76,0.2)" stroke-width="1" stroke-dasharray="4 3"/>
+                    <text x="660" y="147" text-anchor="middle" fill="#9AA3B4" font-size="11" font-family="Inter,sans-serif" font-weight="600">D — Arkadaşın</text>
+                    <text x="660" y="161" text-anchor="middle" fill="#6B7A94" font-size="8.5" font-family="Inter,sans-serif">8.000 $ · Kâr: 320 $/hafta</text>
+                    <rect x="580" y="173" width="160" height="15" rx="4" fill="rgba(201,168,76,0.04)" stroke="rgba(201,168,76,0.12)" stroke-width="1"/>
+                    <text x="660" y="184" text-anchor="middle" fill="#C9A84C" font-size="8" font-family="Inter,sans-serif" opacity="0.7">Sen ← 80 $/hafta (%1 pasif)</text>
+
+                    <!-- ══ 2. Derinlik ══ -->
+
+                    <!-- B1 — B'nin getirdiği 1 kişi (SEN KAZANIR) -->
+                    <rect x="110" y="230" width="180" height="38" rx="7"
+                          fill="rgba(255,255,255,0.04)" stroke="rgba(201,168,76,0.25)" stroke-width="1.2"/>
+                    <text x="200" y="246" text-anchor="middle" fill="#9AA3B4" font-size="10.5" font-family="Inter,sans-serif" font-weight="600">B1 — B'nin getirdiği</text>
+                    <text x="200" y="259" text-anchor="middle" fill="#6B7A94" font-size="8.5" font-family="Inter,sans-serif">6.000 $ · Kâr: 240 $/hafta</text>
+                    <rect x="110" y="271" width="180" height="15" rx="4" fill="rgba(201,168,76,0.05)" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+                    <text x="200" y="282" text-anchor="middle" fill="#C9A84C" font-size="8" font-family="Inter,sans-serif">Sen ← 60 $/hafta · B ← 60 $/hafta</text>
+
+                    <!-- B2 — B'nin diğer davetlisi (SEN KAZANMAZ) — soluk -->
+                    <rect x="490" y="230" width="150" height="38" rx="7"
+                          fill="rgba(255,255,255,0.02)" stroke="rgba(107,122,148,0.12)" stroke-width="1" stroke-dasharray="3 3"/>
+                    <text x="565" y="246" text-anchor="middle" fill="#4B5669" font-size="10" font-family="Inter,sans-serif" font-weight="600">B2 — B'nin getirdiği</text>
+                    <text x="565" y="259" text-anchor="middle" fill="#374151" font-size="8.5" font-family="Inter,sans-serif">Başka bir davetli</text>
+                    <rect x="490" y="271" width="150" height="15" rx="4" fill="rgba(255,255,255,0.02)" stroke="rgba(107,122,148,0.08)" stroke-width="1"/>
+                    <text x="565" y="282" text-anchor="middle" fill="#4B5669" font-size="8" font-family="Inter,sans-serif">Sen KAZANMAZ · B ← %1</text>
+
+                    <!-- C1 — C'nin getirdiği kişi (SEN KAZANIR) -->
+                    <rect x="350" y="230" width="130" height="38" rx="7"
+                          fill="rgba(255,255,255,0.04)" stroke="rgba(201,168,76,0.25)" stroke-width="1.2"/>
+                    <text x="415" y="246" text-anchor="middle" fill="#9AA3B4" font-size="10.5" font-family="Inter,sans-serif" font-weight="600">C1 — C'nin getirdiği</text>
+                    <text x="415" y="259" text-anchor="middle" fill="#6B7A94" font-size="8.5" font-family="Inter,sans-serif">4.000 $ · Kâr: 160 $/hafta</text>
+                    <rect x="350" y="271" width="130" height="15" rx="4" fill="rgba(201,168,76,0.05)" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+                    <text x="415" y="282" text-anchor="middle" fill="#C9A84C" font-size="8" font-family="Inter,sans-serif">Sen ← 40 $/hafta</text>
+
+                    <!-- LEGEND KUTUSU ══ -->
+                    <rect x="640" y="228" width="172" height="80" rx="7" fill="rgba(8,12,20,0.7)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                    <text x="652" y="245" fill="#6B7A94" font-size="8.5" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">AÇIKLAMA</text>
+                    <!-- Tam çizgi -->
+                    <line x1="652" y1="257" x2="675" y2="257" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
+                    <text x="680" y="261" fill="#9AA3B4" font-size="8.5" font-family="Inter,sans-serif">Sen kazanırsın (%1)</text>
+                    <!-- Kesikli çizgi -->
+                    <line x1="652" y1="272" x2="675" y2="272" stroke="rgba(107,122,148,0.3)" stroke-width="1" stroke-dasharray="3 3"/>
+                    <text x="680" y="276" fill="#6B7A94" font-size="8.5" font-family="Inter,sans-serif">Sen kazanmaz</text>
+                    <!-- Koyu kutu -->
+                    <rect x="652" y="282" width="12" height="8" rx="2" fill="rgba(255,255,255,0.02)" stroke="rgba(107,122,148,0.15)" stroke-width="1" stroke-dasharray="2 2"/>
+                    <text x="668" y="290" fill="#4B5669" font-size="8.5" font-family="Inter,sans-serif">Diğer davetliler</text>
+
+                </svg>
+            </div>
+
+            <!-- Alt özet satırı -->
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px">
+                <div class="card" style="padding:12px 14px;text-align:center">
+                    <p style="font-size:10px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Bu örnekte senin toplam</p>
+                    <p style="font-size:1.1rem;font-weight:700;color:var(--gold-lt)">330 $ / hafta</p>
+                    <p style="font-size:10px;color:var(--muted);margin-top:2px">400 + 100 + 50 + 80 + 60 + 40 → kendi kârın + pasif</p>
+                </div>
+                <div class="card-gold" style="padding:12px 14px;text-align:center">
+                    <p style="font-size:10px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Kural</p>
+                    <p style="font-size:1rem;font-weight:700;color:var(--text)">Kim getirirse o kazanır</p>
+                    <p style="font-size:10px;color:var(--muted);margin-top:2px">Her kişi kendi zincirinin 2 halkasından %1 alır</p>
+                </div>
+                <div class="card" style="padding:12px 14px;text-align:center">
+                    <p style="font-size:10px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Sınır</p>
+                    <p style="font-size:1rem;font-weight:700;color:var(--muted2)">Yatay değil dikey</p>
+                    <p style="font-size:10px;color:var(--muted);margin-top:2px">Kaç kişi getirirsen getir — sadece 1 zincir kazandırır</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 7 — KAPANIŞ
+══════════════════════════════════════════ -->
+<section class="slide">
+    <div class="inner" style="text-align:center;max-width:560px;margin:0 auto">
+        <div style="width:1px;height:48px;background:linear-gradient(transparent,var(--border2));margin:0 auto 32px"></div>
+        <div class="eyebrow" style="justify-content:center">
+            <span>Başlamak İçin</span>
+        </div>
+        <h2 class="section-title" style="font-size:clamp(2rem,4.5vw,3rem);margin-bottom:16px">
+            Sisteme Dahil Olmaya<br>
+            <span style="color:var(--gold-lt)">Hazır mısınız?</span>
+        </h2>
+        <p style="color:var(--muted2);font-size:14px;line-height:1.7;margin-bottom:36px;max-width:400px;margin-left:auto;margin-right:auto">
+            5/24 çalışan Expert Advisor sistemimiz ile finansal özgürlüğünüzü inşa edin. Şeffaf yapı, veriye dayalı strateji.
+        </p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:40px">
+            <button style="background:var(--gold);color:#080C14;font-weight:700;padding:12px 32px;border-radius:6px;font-size:14px;border:none;cursor:pointer;font-family:'Inter',sans-serif;letter-spacing:0.3px;transition:opacity 0.2s"
+                onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                Hemen Başla
+            </button>
+            <button style="background:transparent;color:var(--text);font-weight:600;padding:12px 32px;border-radius:6px;font-size:14px;border:1px solid var(--border2);cursor:pointer;font-family:'Inter',sans-serif;transition:border-color 0.2s"
+                onmouseover="this.style.borderColor='rgba(201,168,76,0.4)'" onmouseout="this.style.borderColor='var(--border2)'">
+                Daha Fazla Bilgi
+            </button>
+        </div>
+        <p style="font-size:11px;color:var(--muted);max-width:380px;margin:0 auto;line-height:1.6">
+            Bu sunum yatırım tavsiyesi içermez. Tüm finansal kararlar kullanıcının kendi sorumluluğundadır.
+        </p>
+        <div style="width:1px;height:48px;background:linear-gradient(var(--border2),transparent);margin:32px auto 0"></div>
+    </div>
+</section>
+
+</div><!-- /track -->
+</div><!-- /slider -->
+
+<script>
+    const track    = document.getElementById('track');
+    const slides   = document.querySelectorAll('.slide');
+    const dotsCont = document.getElementById('dots');
+    const btnPrev  = document.getElementById('btn-prev');
+    const btnNext  = document.getElementById('btn-next');
+    const counter  = document.getElementById('counter');
+    const total    = slides.length;
+    let current    = 0;
+    let busy       = false;
+
+    // Build dots
+    const dots = [];
+    slides.forEach((_, i) => {
+        const d = document.createElement('button');
+        d.className = 'dot';
+        d.setAttribute('aria-label', `Sayfa ${i + 1}`);
+        d.addEventListener('click', () => goTo(i));
+        dotsCont.appendChild(d);
+        dots.push(d);
+    });
+
+    function update() {
+        dots.forEach((d, i) => d.classList.toggle('active', i === current));
+        btnPrev.disabled = current === 0;
+        btnNext.disabled = current === total - 1;
+        counter.textContent = `${current + 1} / ${total}`;
+    }
+
+    function goTo(idx) {
+        if (busy || idx === current || idx < 0 || idx >= total) return;
+        slides[current].classList.remove('visible');
+        current = idx;
+        track.style.transform = `translateY(-${current * 100}vh)`;
+        busy = true;
+        setTimeout(() => {
+            slides[current].classList.add('visible');
+            busy = false;
+        }, 380);
+        update();
+    }
+
+    const next = () => goTo(current + 1);
+    const prev = () => goTo(current - 1);
+
+    btnNext.addEventListener('click', next);
+    btnPrev.addEventListener('click', prev);
+
+    // Keyboard
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowDown' || e.key === 'PageDown') next();
+        if (e.key === 'ArrowUp'   || e.key === 'PageUp')   prev();
+    });
+
+    // Wheel
+    let wt;
+    document.addEventListener('wheel', e => {
+        e.preventDefault();
+        clearTimeout(wt);
+        wt = setTimeout(() => {
+            if (e.deltaY > 20) next();
+            else if (e.deltaY < -20) prev();
+        }, 40);
+    }, { passive: false });
+
+    // Touch
+    let ty = 0;
+    document.addEventListener('touchstart', e => { ty = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend',   e => {
+        const d = ty - e.changedTouches[0].clientY;
+        if (Math.abs(d) > 45) { d > 0 ? next() : prev(); }
+    }, { passive: true });
+
+    // Init
+    update();
+    setTimeout(() => slides[0].classList.add('visible'), 80);
+</script>
+</body>
+</html>
