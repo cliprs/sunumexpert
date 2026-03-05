@@ -85,6 +85,24 @@
         }
         .slide.visible .inner { opacity: 1; transform: none; }
 
+        /* ── SLIDE 5 BOTTOM GRID ── */
+        .slide5-bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        /* ── SLIDE 1 RESPONSIVE GRID ── */
+        .slide1-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+            width: 100%;
+        }
+        .slide1-left { display: flex; flex-direction: column; }
+        .slide1-right { display: flex; flex-direction: column; gap: 12px; }
+
         /* scrollable for dense slides */
         .scroll-wrap {
             overflow-y: auto;
@@ -339,6 +357,11 @@
             .pie-legend-grid { grid-template-columns: 1fr !important; }
             .scenario-grid { grid-template-columns: 1fr !important; }
             .scenario-arrow { display: none; }
+            .slide1-inner { grid-template-columns: 1fr !important; gap: 20px !important; }
+            .slide1-left .logomark { width: 36px; height: 36px; font-size: 16px; margin-bottom: 16px; }
+            .slide1-left h1.display { font-size: clamp(1.8rem, 8vw, 2.6rem); }
+            .slide1-right { gap: 8px !important; }
+            .slide5-bottom-grid { grid-template-columns: 1fr; }
         }
 
         /* ── TOP HEADER BAR ── */
@@ -434,10 +457,10 @@
 <!-- ══════════════════════════════════════════
      SLIDE 1 — KAPAK
 ══════════════════════════════════════════ -->
-<section class="slide">
-    <div class="inner" style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center">
+<section class="slide" style="align-items:flex-start;padding-top:52px">
+    <div class="inner slide1-inner">
         <!-- Sol -->
-        <div>
+        <div class="slide1-left">
             <div class="logomark">◈</div>
             <div class="eyebrow">Expert Advisor İşlem Teknolojisi</div>
             <h1 class="display">
@@ -449,31 +472,31 @@
             </p>
         </div>
         <!-- Sağ — metrik panel -->
-        <div style="display:flex;flex-direction:column;gap:12px">
-            <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;display:flex;justify-content:space-between;align-items:center">
+        <div class="slide1-right">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center">
                 <div>
                     <p style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Ortalama Haftalık Getiri</p>
-                    <p style="font-size:2rem;font-weight:700;color:var(--gold-lt)">~ %4</p>
+                    <p style="font-size:1.8rem;font-weight:700;color:var(--gold-lt)">~ %4</p>
                 </div>
                 <div style="text-align:right">
                     <p style="font-size:10px;color:var(--muted);margin-bottom:4px">Ortalama / Haftalık</p>
                     <p style="font-size:12px;color:var(--green);font-weight:600">▲ İstikrarlı</p>
                 </div>
             </div>
-            <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;display:flex;justify-content:space-between;align-items:center">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center">
                 <div>
                     <p style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Çalışma Süresi</p>
-                    <p style="font-size:2rem;font-weight:700;color:var(--text)">5 / 24</p>
+                    <p style="font-size:1.8rem;font-weight:700;color:var(--text)">7 / 24</p>
                 </div>
                 <div style="text-align:right">
                     <p style="font-size:10px;color:var(--muted);margin-bottom:4px">Kesintisiz</p>
                     <p style="font-size:12px;color:var(--muted2);font-weight:600">Otomatik</p>
                 </div>
             </div>
-            <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;display:flex;justify-content:space-between;align-items:center">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center">
                 <div>
                     <p style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Referans Bonusu</p>
-                    <p style="font-size:2rem;font-weight:700;color:var(--text)">%4</p>
+                    <p style="font-size:1.8rem;font-weight:700;color:var(--text)">%4</p>
                 </div>
                 <div style="text-align:right">
                     <p style="font-size:10px;color:var(--muted);margin-bottom:4px">Tek seferlik</p>
@@ -487,26 +510,26 @@
 <!-- ══════════════════════════════════════════
      SLIDE 2 — HAFTALIK KAZANÇ
 ══════════════════════════════════════════ -->
-<section class="slide">
+<section class="slide" style="align-items:flex-start;padding-top:50px">
     <div class="inner">
         <div class="scroll-wrap">
             <div class="eyebrow">Getiri Modeli</div>
-            <h2 class="section-title">Ortalama %8 Performans</h2>
-            <p style="color:var(--muted2);font-size:14px;margin-bottom:28px">Expert Advisor, piyasa verilerini analiz ederek haftalık ortalama %8 brüt performans üretir. Bu performansın %6'sı şeffaf bir şekilde yatırımcı ve referans ağına dağıtılır.</p>
+            <h2 class="section-title" style="margin-bottom:8px">Ortalama %8 Performans</h2>
+            <p style="color:var(--muted2);font-size:13px;margin-bottom:14px">Expert Advisor, piyasa verilerini analiz ederek haftalık ortalama %8 brüt performans üretir. Bu performansın %6'sı şeffaf biçimde yatırımcı ve referans ağına dağıtılır.</p>
 
             <!-- Ana kart -->
-            <div style="background:var(--surface);border:1px solid rgba(201,168,76,0.18);border-radius:14px;padding:32px 36px;margin-bottom:20px;display:flex;align-items:center;gap:40px;flex-wrap:wrap">
+            <div style="background:var(--surface);border:1px solid rgba(201,168,76,0.18);border-radius:12px;padding:16px 20px;margin-bottom:12px;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
                 <div>
-                    <p style="font-size:12px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Net Yatırımcı Kazancı</p>
-                    <div class="big-number">%4</div>
-                    <p style="color:var(--muted);font-size:13px;margin-top:6px">Haftalık · Net · Otomatik</p>
+                    <p style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px">Net Yatırımcı Kazancı</p>
+                    <p style="font-family:'Playfair Display',serif;font-size:clamp(3rem,8vw,5rem);line-height:1;color:var(--gold-lt);letter-spacing:-1px;font-weight:700">%4</p>
+                    <p style="color:var(--muted);font-size:12px;margin-top:3px">Haftalık · Net · Otomatik</p>
                 </div>
-                <div style="flex:1;min-width:200px">
+                <div style="flex:1;min-width:150px">
                     <div class="pbar-track" style="margin-bottom:4px">
                         <div class="pbar-fill" style="width:50%"></div>
                     </div>
-                    <p style="font-size:11px;color:var(--muted);margin-bottom:16px">Brüt %8 performans üzerinden dağıtım</p>
-                    <div class="badge badge-green" style="margin-bottom:8px">
+                    <p style="font-size:11px;color:var(--muted);margin-bottom:10px">Brüt %8 performans üzerinden dağıtım</p>
+                    <div class="badge badge-green">
                         <span class="dot-pulse"></span>
                         EA strateji istikrarı ile optimize
                     </div>
@@ -515,22 +538,48 @@
 
             <!-- Hesaplama tablosu -->
             <div class="g3">
-                <div class="card">
-                    <p style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">1.000 $</p>
-                    <p style="font-size:1.6rem;font-weight:700;color:var(--green)">+ 40 $</p>
-                    <p style="font-size:11px;color:var(--muted);margin-top:3px">haftalık kazanç</p>
+                <div class="card" style="padding:8px 16px">
+                    <p style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">1.000 $</p>
+                    <p style="font-size:1.4rem;font-weight:700;color:var(--green)">+ 40 $</p>
+                    <p style="font-size:11px;color:var(--muted);margin-top:2px">haftalık kazanç</p>
                 </div>
-                <div class="card-gold">
-                    <p style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">5.000 $</p>
-                    <p style="font-size:1.6rem;font-weight:700;color:var(--gold-lt)">+ 200 $</p>
-                    <p style="font-size:11px;color:var(--muted);margin-top:3px">haftalık kazanç</p>
+                <div class="card-gold" style="padding:8px 16px">
+                    <p style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">5.000 $</p>
+                    <p style="font-size:1.4rem;font-weight:700;color:var(--gold-lt)">+ 200 $</p>
+                    <p style="font-size:11px;color:var(--muted);margin-top:2px">haftalık kazanç</p>
                 </div>
-                <div class="card">
-                    <p style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">10.000 $</p>
-                    <p style="font-size:1.6rem;font-weight:700;color:var(--green)">+ 400 $</p>
-                    <p style="font-size:11px;color:var(--muted);margin-top:3px">haftalık kazanç</p>
+                <div class="card" style="padding:8px 16px">
+                    <p style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">10.000 $</p>
+                    <p style="font-size:1.4rem;font-weight:700;color:var(--green)">+ 400 $</p>
+                    <p style="font-size:11px;color:var(--muted);margin-top:2px">haftalık kazanç</p>
                 </div>
             </div>
+
+            <!-- Dağıtım özeti şeridi -->
+            <div style="margin-top:10px;padding:8px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+                <div style="display:flex;align-items:center;gap:6px">
+                    <div style="width:8px;height:8px;border-radius:50%;background:#2ECC8A"></div>
+                    <span style="font-size:10px;color:var(--muted2)">Yatırımcı <strong style="color:#2ECC8A">%4</strong></span>
+                </div>
+                <div style="width:1px;height:14px;background:var(--border)"></div>
+                <div style="display:flex;align-items:center;gap:6px">
+                    <div style="width:8px;height:8px;border-radius:50%;background:var(--gold)"></div>
+                    <span style="font-size:10px;color:var(--muted2)">Sponsor <strong style="color:var(--gold-lt)">%1</strong></span>
+                </div>
+                <div style="width:1px;height:14px;background:var(--border)"></div>
+                <div style="display:flex;align-items:center;gap:6px">
+                    <div style="width:8px;height:8px;border-radius:50%;background:var(--muted)"></div>
+                    <span style="font-size:10px;color:var(--muted2)">Üst Sponsor <strong style="color:var(--muted2)">%1</strong></span>
+                </div>
+                <div style="width:1px;height:14px;background:var(--border)"></div>
+                <div style="display:flex;align-items:center;gap:6px">
+                    <div style="width:8px;height:8px;border-radius:50%;background:#1E2D45;border:1px solid var(--border2)"></div>
+                    <span style="font-size:10px;color:var(--muted2)">Master <strong style="color:var(--muted2)">%2</strong></span>
+                </div>
+                <div style="width:1px;height:14px;background:var(--border)"></div>
+                <span style="font-size:10px;color:var(--muted);letter-spacing:0.5px">Toplam dağıtım <strong style="color:var(--text)">%8</strong> / brüt</span>
+            </div>
+
         </div>
     </div>
 </section>
@@ -541,39 +590,39 @@
 <section class="slide">
     <div class="inner">
         <div class="scroll-wrap">
-            <div class="eyebrow">Referans Sistemi</div>
-            <h2 class="section-title">Stratejik Referans Ağı ve<br>Teşvik Modeli</h2>
-            <p style="color:var(--muted2);font-size:14px;margin-bottom:24px">Ağınıza dahil ettiğiniz her yeni yatırımcının sisteme sunduğu ilk sermaye girişi üzerinden, ekosisteme katkı payı olarak %4 oranında tek seferlik bir referans teşviki kazanırsınız.</p>
+            <div class="eyebrow">Stratejik Paydaşlık</div>
+            <h2 class="section-title">Ekosistem Büyüme ve<br>Teşvik Programı</h2>
+            <p style="color:var(--muted2);font-size:13px;margin-bottom:14px">EA sistemimizin ürettiği kârlılık sayesinde, topluluğumuzu büyüten paydaşlara özel teşvik modeli sunuyoruz.</p>
 
             <!-- Senaryo -->
-            <div class="card" style="margin-bottom:14px">
-                <p style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:16px">Örnek Senaryo</p>
-                <div class="scenario-grid" style="display:grid;grid-template-columns:1fr 32px 1fr;gap:12px;align-items:center">
-                    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px">
-                        <p style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Arkadaşın Yatırımı</p>
-                        <p style="font-size:1.6rem;font-weight:700;color:var(--text)">10.000 <span style="font-size:1rem;color:var(--muted)">$</span></p>
+            <div class="card" style="margin-bottom:12px;padding:16px 20px">
+                <p style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Teşvik Modeli Örneği</p>
+                <div class="scenario-grid" style="display:grid;grid-template-columns:1fr 32px 1fr;gap:10px;align-items:center">
+                    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px">
+                        <p style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Sermaye Katkısı</p>
+                        <p style="font-size:1.5rem;font-weight:700;color:var(--text)">10.000 <span style="font-size:1rem;color:var(--muted)">$</span></p>
                     </div>
                     <div class="scenario-arrow" style="text-align:center;color:var(--muted);font-size:18px">→</div>
-                    <div style="background:var(--surface2);border:1px solid rgba(201,168,76,0.2);border-radius:8px;padding:16px">
-                        <p style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Senin Referans Kazancın</p>
-                        <p style="font-size:1.6rem;font-weight:700;color:var(--gold-lt)">400 <span style="font-size:1rem;color:var(--muted)">$</span></p>
-                        <p style="font-size:11px;color:var(--muted);margin-top:3px">Yatırımın %4'ü — tek seferlik</p>
+                    <div style="background:var(--surface2);border:1px solid rgba(201,168,76,0.2);border-radius:8px;padding:12px">
+                        <p style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Paydaşlık Teşviki</p>
+                        <p style="font-size:1.5rem;font-weight:700;color:var(--gold-lt)">400 <span style="font-size:1rem;color:var(--muted)">$</span></p>
+                        <p style="font-size:11px;color:var(--muted);margin-top:2px">Tek seferlik büyüme payı (%4)</p>
                     </div>
                 </div>
             </div>
 
             <!-- Güvenlik kilidi -->
-            <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px">
-                <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-                    <div style="width:30px;height:30px;border-radius:6px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);display:flex;align-items:center;justify-content:center;font-size:14px">⏸</div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+                    <div style="width:28px;height:28px;border-radius:6px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);display:flex;align-items:center;justify-content:center;font-size:13px">🛡️</div>
                     <div>
-                        <p style="font-size:13px;font-weight:600;color:var(--text)">Sermaye Doğrulama ve Güvenlik Protokolü</p>
-                        <p style="font-size:11px;color:var(--muted)">Teşvik ödemeleri için uygulanan likidite koruma süreci</p>
+                        <p style="font-size:13px;font-weight:600;color:var(--text)">Sermaye Bütünlüğü ve Provizyon Süreci</p>
+                        <p style="font-size:11px;color:var(--muted)">Sürdürülebilir büyüme için uygulanan finansal denetim</p>
                     </div>
                 </div>
-                <hr class="h-rule" style="margin:14px 0">
-                <p style="font-size:13px;color:var(--muted2);line-height:1.65">
-                    Hakedilen bu teşvik tutarı, yatırımın sistem içerisindeki istikrarını doğrulamak ve platformun likidite dengesini korumak amacıyla <strong style="color:var(--text)">30 günlük</strong> bir provizyon sürecine tabi tutulur. Bu uygulama, suistimalleri önleyerek tüm paydaşlar için <strong style="color:var(--gold-lt)">sürdürülebilir ve güvenli</strong> bir büyüme zemini oluşturur.
+                <hr class="h-rule" style="margin:10px 0">
+                <p style="font-size:13px;color:var(--muted2);line-height:1.6">
+                    Hakedilen paydaşlık teşviki, <strong style="color:var(--text)">30 günlük</strong> provizyon sürecinden sonra aktarılır. Bu protokol, sistemin finansal sağlığını korurken <strong style="color:var(--gold-lt)">gerçek ticari performansa dayalı</strong> büyüme modelini garanti altına alır.
                 </p>
             </div>
         </div>
@@ -586,39 +635,39 @@
 <section class="slide">
     <div class="inner">
         <div class="scroll-wrap">
-            <div class="eyebrow">İşlem Akışı</div>
-            <h2 class="section-title">Nasıl Çalışır?</h2>
-            <p style="color:var(--muted2);font-size:14px;margin-bottom:28px">Referans kazancınız üç adımda işlenir.</p>
+            <div class="eyebrow">Operasyonel Süreç</div>
+            <h2 class="section-title">Sermaye ve Teşvik Yönetimi</h2>
+            <p style="color:var(--muted2);font-size:13px;margin-bottom:16px">Paydaşlık teşvikleri, EA sisteminin genişleyen işlem hacmi ve ticari verimliliğinden finanse edilir.</p>
 
             <div style="display:flex;flex-direction:column;gap:0">
 
                 <!-- Adım 1 -->
-                <div class="step-row" style="margin-bottom:0;padding-bottom:20px">
+                <div class="step-row" style="margin-bottom:0;padding-bottom:14px">
                     <div style="display:flex;flex-direction:column;align-items:center">
                         <div class="step-num">01</div>
                         <div class="step-connector"></div>
                     </div>
-                    <div class="card" style="flex:1;margin-top:0">
-                        <p style="font-size:13px;font-weight:600;margin-bottom:4px">Arkadaşın Yatırım Yapar</p>
-                        <p style="font-size:13px;color:var(--muted2);line-height:1.6">Referans bağlantınla sisteme katılan arkadaşın yatırımını tamamlar. Referans ilişkisi otomatik kaydedilir.</p>
+                    <div class="card" style="flex:1;margin-top:0;padding:12px 16px">
+                        <p style="font-size:13px;font-weight:600;margin-bottom:3px">Sermaye Entegrasyonu</p>
+                        <p style="font-size:12px;color:var(--muted2);line-height:1.5">Yeni sermaye girişiyle EA işlem hacmi genişler, sistemin operasyonel gücü ve likidite kapasitesi artar.</p>
                     </div>
                 </div>
 
                 <!-- Adım 2 -->
-                <div class="step-row" style="padding-bottom:20px">
+                <div class="step-row" style="padding-bottom:14px">
                     <div style="display:flex;flex-direction:column;align-items:center">
                         <div class="step-num">02</div>
                         <div class="step-connector"></div>
                     </div>
-                    <div class="card" style="flex:1">
-                        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:8px">
-                            <p style="font-size:13px;font-weight:600">Kazancın Sisteme Rezerve Edilir</p>
+                    <div class="card" style="flex:1;padding:12px 16px">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;margin-bottom:6px">
+                            <p style="font-size:13px;font-weight:600">Ticari Doğrulama ve Provizyon</p>
                             <span class="badge badge-muted">
                                 <span class="dot-pulse"></span>
-                                Beklemede · 400 $
+                                Doğrulanıyor · 30 Gün
                             </span>
                         </div>
-                        <p style="font-size:13px;color:var(--muted2);line-height:1.6">400 $ panelinizde görünür ancak 30 günlük doğrulama sürecine girer.</p>
+                        <p style="font-size:12px;color:var(--muted2);line-height:1.5">30 günlük süreç, sermayenin piyasa koşullarında aktifleştiğini ve sistemin planlanan ticari değeri ürettiğini kanıtlar.</p>
                     </div>
                 </div>
 
@@ -627,21 +676,19 @@
                     <div style="display:flex;flex-direction:column;align-items:center">
                         <div class="step-num" style="border-color:rgba(46,204,138,0.3);color:var(--green)">03</div>
                     </div>
-                    <div class="card" style="flex:1;border-color:rgba(46,204,138,0.15)">
-                        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:8px">
-                            <p style="font-size:13px;font-weight:600">Ödeme Gerçekleşir</p>
-                            <span class="badge badge-green">
-                                Onaylandı · 400 $
-                            </span>
+                    <div class="card" style="flex:1;border-color:rgba(46,204,138,0.15);padding:12px 16px">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;margin-bottom:6px">
+                            <p style="font-size:13px;font-weight:600">Teşvik Transferi</p>
+                            <span class="badge badge-green">Onaylandı</span>
                         </div>
-                        <p style="font-size:13px;color:var(--muted2);line-height:1.6">30. gün sonunda yatırım doğrulanır ve 400 $ anında cüzdanınıza aktarılır.</p>
+                        <p style="font-size:12px;color:var(--muted2);line-height:1.5">Ticari verimlilik doğrulandıktan sonra teşvik tutarı anında cüzdanınıza aktarılır.</p>
                     </div>
                 </div>
             </div>
 
-            <div style="display:flex;align-items:center;gap:10px;margin-top:20px;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px">
-                <span style="font-size:14px">◎</span>
-                <p style="font-size:12px;color:var(--muted2)">Amaç: Hem sizin hem de sistemin güvenliğini korumak.</p>
+            <div style="display:flex;align-items:center;gap:10px;margin-top:14px;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px">
+                <span style="font-size:14px">🛡️</span>
+                <p style="font-size:11px;color:var(--muted2);line-height:1.5"><strong>Şeffaflık Beyanı:</strong> Teşvik ödemeleri doğrudan EA sisteminin piyasa işlemlerinden elde ettiği reel katma değer ile finanse edilmektedir.</p>
             </div>
         </div>
     </div>
@@ -655,106 +702,157 @@
         <div class="scroll-wrap">
             <div class="eyebrow">Pasif Gelir Ağı</div>
             <h2 class="section-title">Derinlik Kazançları</h2>
-            <p style="color:var(--muted2);font-size:14px;margin-bottom:24px">Ağınız büyüdükçe haftalık pasif geliriniz de büyür.</p>
+            <p style="color:var(--muted2);font-size:13px;margin-bottom:12px">Ekosistemimiz geliştikçe, sermaye verimliliğine bağlı olarak haftalık performans paylarınız optimize edilir.</p>
 
             <!-- Kural açıklaması -->
-            <div style="background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start">
-                <span style="color:var(--gold);font-size:14px;margin-top:1px">◈</span>
+            <div style="background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:8px 14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start">
+                <span style="color:var(--gold);font-size:14px;margin-top:1px">⚖️</span>
                 <p style="font-size:13px;color:var(--muted2);line-height:1.65">
-                    Her kişi, davet ettiği kişilerin <strong style="color:var(--text)">sadece 1 zincirinden</strong> kazanır.
-                    Arkadaşın kaç kişi getirirse getirsin, sen yalnızca <strong style="color:var(--text)">o arkadaşın getirdiği 1 kişiden</strong> %1 kazanırsın.
+                    Sistem, finansal sürdürülebilirliği korumak amacıyla <strong style="color:var(--text)">Dikey Derinlik Limitasyonu</strong> uygular. Her paydaş, davet ettiği yatırımcının ve onun birincil hattındaki kişinin sermaye hacmi üzerinden performans payı elde eder.
                 </p>
             </div>
 
-            <div class="g2" style="margin-bottom:16px">
+            <div class="g2" style="margin-bottom:12px">
                 <!-- 1. Derinlik -->
-                <div class="card-gold" style="padding:22px">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+                <div class="card-gold" style="padding:14px 18px">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
                         <div style="width:6px;height:6px;border-radius:50%;background:var(--gold)"></div>
                         <p style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold)">1. Derinlik</p>
                     </div>
-                    <p style="font-size:2rem;font-weight:700;color:var(--gold-lt);margin-bottom:4px">%1</p>
-                    <p style="font-size:13px;color:var(--muted2);margin-bottom:14px">Doğrudan davet ettiğin kişinin haftalık <strong style="color:var(--text)">%4 kârından</strong> %1'i</p>
-                    <hr class="h-rule" style="margin:12px 0">
-                    <p style="font-size:12px;color:var(--muted)">B → 10.000 $ yatırım · Robot %6 yaptı</p>
-                    <p style="font-size:13px;font-weight:600;color:var(--gold-lt);margin-top:4px">B alır: 400 $ · Sen alırsın: 100 $</p>
+                    <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px">
+                        <p style="font-size:2rem;font-weight:700;color:var(--gold-lt);flex-shrink:0">%1</p>
+                        <p style="font-size:12px;color:var(--muted2);line-height:1.4">Doğrudan davet ettiğiniz yatırımcının sermayesi üzerinden net haftalık payınız.</p>
+                    </div>
+                    <hr class="h-rule" style="margin:8px 0">
+                    <p style="font-size:11px;color:var(--muted)">B → 10.000 $ yatırım · EA %8 yaptı</p>
+                    <p style="font-size:12px;font-weight:600;color:var(--gold-lt);margin-top:3px">B alır: 400 $ (%4) · Sen alırsın: 100 $ (%1)</p>
                 </div>
 
                 <!-- 2. Derinlik -->
-                <div class="card" style="padding:22px">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+                <div class="card" style="padding:14px 18px">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
                         <div style="width:6px;height:6px;border-radius:50%;background:var(--muted2)"></div>
                         <p style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">2. Derinlik</p>
                     </div>
-                    <p style="font-size:2rem;font-weight:700;color:var(--text);margin-bottom:4px">%1</p>
-                    <p style="font-size:13px;color:var(--muted2);margin-bottom:14px">B'nin getirdiği <strong style="color:var(--text)">1 kişinin</strong> haftalık %4 kârından %1'i</p>
-                    <hr class="h-rule" style="margin:12px 0">
-                    <p style="font-size:12px;color:var(--muted)">C → 10.000 $ yatırım · B getirdi</p>
-                    <p style="font-size:13px;font-weight:600;color:var(--text);margin-top:4px">B alır: 100 $ · Sen de alırsın: 100 $</p>
+                    <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px">
+                        <p style="font-size:2rem;font-weight:700;color:var(--text);flex-shrink:0">%1</p>
+                        <p style="font-size:12px;color:var(--muted2);line-height:1.4">B'nin davet ettiği 1. kişinin sermayesi üzerinden net haftalık payınız.</p>
+                    </div>
+                    <hr class="h-rule" style="margin:8px 0">
+                    <p style="font-size:11px;color:var(--muted)">C → 10.000 $ yatırım · B davet etti</p>
+                    <p style="font-size:12px;font-weight:600;color:var(--text);margin-top:3px">B alır: 100 $ (%1) · Sen de alırsın: 100 $ (%1)</p>
                 </div>
             </div>
 
-            <!-- Kâr Dağılımı (pasta + legend) -->
-            <div class="card" style="padding:20px 24px">
-                <p style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:16px">Kâr Dağılımı — Haftalık %8</p>
-                <div style="display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center">
-                    <!-- PIE -->
-                    <div style="position:relative;flex-shrink:0">
-                        <svg viewBox="0 0 200 200" style="width:110px;height:110px;transform:rotate(-90deg);display:block">
-                            <!-- Toplam 439.6 (2*PI*70) -->
-                            <!-- Yatırımcı %4 (%50) -->
-                            <circle r="70" cx="100" cy="100" fill="transparent" stroke="#2ECC8A" stroke-width="32" stroke-dasharray="219.8 439.6" stroke-dashoffset="0"/>
-                            <!-- Sponsor %1 (%12.5) -->
-                            <circle r="70" cx="100" cy="100" fill="transparent" stroke="#C9A84C" stroke-width="32" stroke-dasharray="54.95 439.6" stroke-dashoffset="-219.8"/>
-                            <!-- Üst Sponsor %1 (%12.5) -->
-                            <circle r="70" cx="100" cy="100" fill="transparent" stroke="#6B7A94" stroke-width="32" stroke-dasharray="54.95 439.6" stroke-dashoffset="-274.75"/>
-                            <!-- Master %2 (%25) -->
-                            <circle r="70" cx="100" cy="100" fill="transparent" stroke="#1E2D45" stroke-width="32" stroke-dasharray="109.9 439.6" stroke-dashoffset="-329.7"/>
-                        </svg>
-                        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column">
-                            <p style="font-size:1rem;font-weight:700;color:var(--text)">%8</p>
-                            <p style="font-size:9px;color:var(--muted)">Toplam</p>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 6 — KÂR DAĞILIMI & BİLEŞİK BÜYÜME
+══════════════════════════════════════════ -->
+<section class="slide">
+    <div class="inner">
+        <div class="scroll-wrap">
+            <div class="eyebrow">Gelir Modeli</div>
+            <h2 class="section-title">Kâr Dağılımı &<br>Bileşik Büyüme</h2>
+            <p style="color:var(--muted2);font-size:13px;margin-bottom:20px">Haftalık performans, şeffaf bir dağıtım modeliyle paylaşılır. Kârınızı yeniden yatırdığınızda bileşik büyüme devreye girer.</p>
+
+            <div class="slide5-bottom-grid">
+
+                <!-- SOL: Kâr Dağılımı -->
+                <div class="card" style="padding:18px 20px">
+                    <p style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Kâr Dağılımı — Haftalık %10</p>
+                    <div style="display:flex;gap:16px;align-items:center">
+                        <!-- PIE -->
+                        <div style="position:relative;flex-shrink:0">
+                            <svg viewBox="0 0 200 200" style="width:90px;height:90px;transform:rotate(-90deg);display:block">
+                                <circle r="70" cx="100" cy="100" fill="transparent" stroke="#2ECC8A" stroke-width="32" stroke-dasharray="175.84 439.6" stroke-dashoffset="0"/>
+                                <circle r="70" cx="100" cy="100" fill="transparent" stroke="#C9A84C" stroke-width="32" stroke-dasharray="43.96 439.6" stroke-dashoffset="-175.84"/>
+                                <circle r="70" cx="100" cy="100" fill="transparent" stroke="#6B7A94" stroke-width="32" stroke-dasharray="43.96 439.6" stroke-dashoffset="-219.8"/>
+                                <circle r="70" cx="100" cy="100" fill="transparent" stroke="#1E2D45" stroke-width="32" stroke-dasharray="175.84 439.6" stroke-dashoffset="-263.76"/>
+                            </svg>
+                            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column">
+                                <p style="font-size:0.9rem;font-weight:700;color:var(--text)">%10</p>
+                                <p style="font-size:8px;color:var(--muted)">Toplam</p>
+                            </div>
                         </div>
-                    </div>
-                    <!-- Legend -->
-                    <div style="display:flex;flex-direction:column;gap:7px">
-                        <div style="display:flex;align-items:center;gap:8px">
-                            <div style="width:3px;height:28px;border-radius:2px;background:#2ECC8A;flex-shrink:0"></div>
-                            <div style="flex:1"><p style="font-size:12px;font-weight:600">Yatırımcı (Sen)</p><p style="font-size:11px;color:var(--muted)">Net kârın</p></div>
-                            <p style="font-size:1rem;font-weight:700;color:#2ECC8A">%4</p>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:8px">
-                            <div style="width:3px;height:28px;border-radius:2px;background:var(--gold);flex-shrink:0"></div>
-                            <div style="flex:1"><p style="font-size:12px;font-weight:600">Sponsor</p><p style="font-size:11px;color:var(--muted)">1. derinlik referans</p></div>
-                            <p style="font-size:1rem;font-weight:700;color:var(--gold-lt)">%1</p>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:8px">
-                            <div style="width:3px;height:28px;border-radius:2px;background:var(--muted);flex-shrink:0"></div>
-                            <div style="flex:1"><p style="font-size:12px;font-weight:600">Üst Sponsor</p><p style="font-size:11px;color:var(--muted)">2. derinlik referans</p></div>
-                            <p style="font-size:1rem;font-weight:700;color:var(--muted2)">%1</p>
-                        </div>
-                        <div style="display:flex;align-items:center;gap:8px">
-                            <div style="width:3px;height:28px;border-radius:2px;background:#1E2D45;border:1px solid var(--border2);flex-shrink:0"></div>
-                            <div style="flex:1"><p style="font-size:12px;font-weight:600">Master — Altyapı</p><p style="font-size:11px;color:var(--muted)">EA Yazılım & İşletim</p></div>
-                            <p style="font-size:1rem;font-weight:700;color:var(--muted2)">%2</p>
+                        <!-- Legend -->
+                        <div style="display:flex;flex-direction:column;gap:6px;flex:1">
+                            <div style="display:flex;align-items:center;gap:7px">
+                                <div style="width:3px;height:24px;border-radius:2px;background:#2ECC8A;flex-shrink:0"></div>
+                                <div style="flex:1"><p style="font-size:11px;font-weight:600">Yatırımcı</p><p style="font-size:10px;color:var(--muted)">Net kârın</p></div>
+                                <p style="font-size:0.95rem;font-weight:700;color:#2ECC8A">%4</p>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:7px">
+                                <div style="width:3px;height:24px;border-radius:2px;background:var(--gold);flex-shrink:0"></div>
+                                <div style="flex:1"><p style="font-size:11px;font-weight:600">Sponsor</p><p style="font-size:10px;color:var(--muted)">1. derinlik</p></div>
+                                <p style="font-size:0.95rem;font-weight:700;color:var(--gold-lt)">%1</p>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:7px">
+                                <div style="width:3px;height:24px;border-radius:2px;background:var(--muted);flex-shrink:0"></div>
+                                <div style="flex:1"><p style="font-size:11px;font-weight:600">Üst Sponsor</p><p style="font-size:10px;color:var(--muted)">2. derinlik</p></div>
+                                <p style="font-size:0.95rem;font-weight:700;color:var(--muted2)">%1</p>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:7px">
+                                <div style="width:3px;height:24px;border-radius:2px;background:#1E2D45;border:1px solid var(--border2);flex-shrink:0"></div>
+                                <div style="flex:1"><p style="font-size:11px;font-weight:600">Master</p><p style="font-size:10px;color:var(--muted)">Altyapı & EA</p></div>
+                                <p style="font-size:0.95rem;font-weight:700;color:var(--muted2)">%4</p>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- SAĞ: Bileşik Büyüme -->
+                <div class="card-gold" style="padding:18px 20px">
+                    <p style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Bileşik Büyüme — 5.000 $ Başlangıç</p>
+                    <div style="display:flex;flex-direction:column;gap:8px">
+                        <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:var(--surface2);border-radius:6px;border:1px solid var(--border)">
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <span style="font-size:10px;color:var(--muted);font-weight:600;min-width:44px">1. Ay</span>
+                                <div style="height:3px;width:40px;background:var(--green);border-radius:99px;opacity:0.4"></div>
+                            </div>
+                            <p style="font-size:13px;font-weight:700;color:var(--green)">5.800 $</p>
+                        </div>
+                        <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:var(--surface2);border-radius:6px;border:1px solid var(--border)">
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <span style="font-size:10px;color:var(--muted);font-weight:600;min-width:44px">3. Ay</span>
+                                <div style="height:3px;width:72px;background:var(--green);border-radius:99px;opacity:0.55"></div>
+                            </div>
+                            <p style="font-size:13px;font-weight:700;color:var(--green)">7.800 $</p>
+                        </div>
+                        <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:var(--surface2);border-radius:6px;border:1px solid rgba(201,168,76,0.2)">
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <span style="font-size:10px;color:var(--muted);font-weight:600;min-width:44px">6. Ay</span>
+                                <div style="height:3px;width:108px;background:var(--gold);border-radius:99px;opacity:0.7"></div>
+                            </div>
+                            <p style="font-size:13px;font-weight:700;color:var(--gold-lt)">12.200 $</p>
+                        </div>
+                        <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:rgba(201,168,76,0.06);border-radius:6px;border:1px solid rgba(201,168,76,0.3)">
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <span style="font-size:10px;color:var(--gold);font-weight:700;min-width:44px">12. Ay</span>
+                                <div style="height:3px;width:140px;background:var(--gold);border-radius:99px"></div>
+                            </div>
+                            <p style="font-size:14px;font-weight:700;color:var(--gold-lt)">29.800 $</p>
+                        </div>
+                    </div>
+                    <p style="font-size:9px;color:var(--muted);margin-top:8px;line-height:1.4">Haftalık %4 kâr yeniden yatırıma dönüştürüldüğünde tahmini bileşik büyüme. Gerçek sonuçlar değişir.</p>
+                </div>
+
             </div>
         </div>
     </div>
 </section>
 
 <!-- ══════════════════════════════════════════
-     SLIDE 6 — DETAYLI AĞ ŞEMASI
 ══════════════════════════════════════════ -->
 <section class="slide">
     <div class="inner" style="max-width:960px">
         <div class="scroll-wrap">
             <div class="eyebrow">Referans Ağı</div>
-            <h2 class="section-title" style="margin-bottom:6px">Gelir Ağı Yapısı</h2>
+            <h2 class="section-title" style="margin-bottom:6px">Performans ve Katkı Odaklı<br>Hakediş Modeli</h2>
             <p style="color:var(--muted2);font-size:14px;margin-bottom:20px">
-                Kim getirirse o kazanır. Her kişi kendi zincirinden — <strong style="color:var(--text)">1. ve 2. halkadan</strong> — %1 pasif alır.
+                Ekosistemimiz şeffaf ve liyakat dayalı bir teşvik yapısı üzerine kuruludur. Her paydaş, kendi oluşturduğu portföy ağının <strong style="color:var(--text)">birincil ve ikincil derinlik</strong> kademelerinden %1 performans payı hakedişi elde eder.
             </p>
 
             <div class="card" style="padding:24px 20px;overflow:hidden">
@@ -769,43 +867,40 @@
                     <rect x="0" y="310" width="820" height="90"  fill="rgba(255,255,255,0.004)" rx="0"/>
 
                     <!-- Katman etiketleri -->
-                    <text x="8" y="20" fill="#C9A84C" font-size="8.5" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1.5" opacity="0.8">SEN</text>
+                    <text x="8" y="12" fill="#C9A84C" font-size="8.5" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1.5" opacity="0.8">SEN</text>
                     <text x="8" y="112" fill="#6B7A94" font-size="8" font-family="Inter,sans-serif" font-weight="600" letter-spacing="1.2">1. DERİNLİK</text>
                     <text x="8" y="222" fill="#6B7A94" font-size="8" font-family="Inter,sans-serif" font-weight="600" letter-spacing="1.2">2. DERİNLİK</text>
                     <text x="8" y="332" fill="#374151" font-size="8" font-family="Inter,sans-serif" font-weight="600" letter-spacing="1.2">3. DERİNLİK···</text>
 
-                    <!-- Ayraç çizgileri -->
-                    <line x1="0" y1="88"  x2="820" y2="88"  stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-                    <line x1="0" y1="198" x2="820" y2="198" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
-                    <line x1="0" y1="310" x2="820" y2="310" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+                    <!-- Ayraç çizgileri — sol etiketten sonra başlar (x=60), Master notu alanı öncesinde biter (x=810) -->
+                    <line x1="60" y1="88"  x2="810" y2="88"  stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                    <line x1="60" y1="198" x2="810" y2="198" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                    <line x1="60" y1="310" x2="810" y2="310" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
 
                     <!-- ══ BAĞLANTI ÇİZGİLERİ ══ -->
 
-                    <!-- SEN → A (davet etti) -->
-                    <line x1="280" y1="60" x2="200" y2="130" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
-                    <!-- SEN → B (davet etti) -->
-                    <line x1="300" y1="60" x2="440" y2="130" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
-                    <!-- SEN → C (davet etti) -->
-                    <line x1="310" y1="60" x2="650" y2="130" stroke="rgba(201,168,76,0.3)" stroke-width="1.5" stroke-dasharray="4 3"/>
+                    <!-- SEN → B: SEN alt kenarından (y=60) B üst kenarına (y=130) -->
+                    <line x1="120" y1="60" x2="200" y2="130" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+                    <!-- SEN → C -->
+                    <line x1="145" y1="60" x2="440" y2="130" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+                    <!-- SEN → D (kesikli) -->
+                    <line x1="158" y1="60" x2="660" y2="130" stroke="rgba(201,168,76,0.3)" stroke-width="1.5" stroke-dasharray="4 3"/>
 
-                    <!-- A → A1 (A'nın getirdiği 1 kişi — SEN bu kişiden kazanır) -->
+                    <!-- B → B1: B alt kenarından (y=170) B1 üst kenarına (y=230) -->
                     <line x1="200" y1="170" x2="200" y2="230" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
-                    <!-- A → A2, A3 (A'nın diğer davetleri — SEN bunlardan KAZANMAZ) -->
-                    <line x1="190" y1="170" x2="120" y2="230" stroke="rgba(107,122,148,0.15)" stroke-width="1" stroke-dasharray="3 3"/>
-                    <line x1="210" y1="170" x2="310" y2="230" stroke="rgba(107,122,148,0.15)" stroke-width="1" stroke-dasharray="3 3"/>
+                    <!-- B → B2 (SEN KAZANMAZ — kesikli, soluk) -->
+                    <line x1="240" y1="170" x2="490" y2="230" stroke="rgba(107,122,148,0.15)" stroke-width="1" stroke-dasharray="3 3"/>
 
-                    <!-- B → B1 (B'nin getirdiği 1 kişi — SEN bu kişiden kazanır) -->
-                    <line x1="440" y1="170" x2="440" y2="230" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
-                    <!-- B → B2 (SEN bundan KAZANMAZ) -->
-                    <line x1="430" y1="170" x2="560" y2="230" stroke="rgba(107,122,148,0.15)" stroke-width="1" stroke-dasharray="3 3"/>
+                    <!-- C → C1: C alt kenarından (y=170) C1 üst kenarına (y=230) -->
+                    <line x1="440" y1="170" x2="415" y2="230" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
 
-                    <!-- C → C1 (C'nin getirdiği kişi — SEN bu kişiden kazanır) -->
-                    <line x1="650" y1="170" x2="700" y2="230" stroke="rgba(201,168,76,0.3)" stroke-width="1.5" stroke-dasharray="4 3"/>
+                    <!-- D → D1 (SEN kazanır, kesikli) -->
+                    <line x1="660" y1="170" x2="700" y2="230" stroke="rgba(201,168,76,0.3)" stroke-width="1.5" stroke-dasharray="4 3"/>
 
-                    <!-- A1 → üçüncü katman (soluk) -->
-                    <line x1="200" y1="268" x2="200" y2="322" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-                    <!-- B1 → üçüncü katman -->
-                    <line x1="440" y1="268" x2="440" y2="322" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+                    <!-- B1 → 3. katman: B1 alt kenarından (y=268) katman çizgisine kadar (y=310) -->
+                    <line x1="200" y1="268" x2="200" y2="310" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+                    <!-- C1 → 3. katman -->
+                    <line x1="415" y1="268" x2="415" y2="310" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
 
                     <!-- ══ SEN (kök) — sola taşındı ══ -->
                     <rect x="8" y="18" width="160" height="42" rx="8"
@@ -867,14 +962,15 @@
                     <line x1="650" y1="32" x2="650" y2="90" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
 
                     <!-- ── TOPLAM ── -->
-                    <rect x="651" y="8" width="165" height="90" rx="0"
+                    <rect x="672" y="8" width="144" height="90" rx="0"
                           fill="rgba(201,168,76,0.08)" stroke="none"/>
-                    <text x="734" y="48" text-anchor="middle" fill="#6B7A94" font-size="9" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">TOPLAM</text>
-                    <text x="734" y="68" text-anchor="middle" fill="#E8C87A" font-size="18" font-family="Inter,sans-serif" font-weight="700">730 $</text>
-                    <text x="734" y="82" text-anchor="middle" fill="#6B7A94" font-size="8" font-family="Inter,sans-serif">bu hafta</text>
+                    <text x="739" y="48" text-anchor="middle" fill="#6B7A94" font-size="9" font-family="Inter,sans-serif" font-weight="700" letter-spacing="1">TOPLAM</text>
+                    <text x="739" y="68" text-anchor="middle" fill="#E8C87A" font-size="18" font-family="Inter,sans-serif" font-weight="700">730 $</text>
+                    <text x="739" y="82" text-anchor="middle" fill="#6B7A94" font-size="8" font-family="Inter,sans-serif">bu hafta</text>
 
-                    <!-- Master notu (panel altı) -->
-                    <text x="182" y="103" fill="#374151" font-size="7.5" font-family="Inter,sans-serif">* Kalan %2 → Master (EA Geliştiricisi): 10.000$ × %2 = 200 $   |   Toplam dağıtım: %4 (yatırımcı) + %2 (Master) + %1 (Sponsor) + %1 (Üst Sponsor) = %8</text>
+                    <!-- Master notu (panel altı) — sağa hizalı, okunabilir renk -->
+                    <rect x="180" y="96" width="636" height="18" rx="3" fill="rgba(255,255,255,0.03)"/>
+                    <text x="814" y="109" text-anchor="end" fill="#9AA3B4" font-size="9.5" font-family="Inter,sans-serif">* Kalan %2 → Master (EA Geliştiricisi): 10.000$ × %2 = 200 $   |   Toplam dağıtım: %4 (yatırımcı) + %2 (Master) + %1 (Sponsor) + %1 (Üst Sponsor) = %8</text>
 
                     <!-- ══ 1. Derinlik: B, C, D ══ -->
 
@@ -948,19 +1044,19 @@
             <!-- Alt özet satırı -->
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px">
                 <div class="card" style="padding:12px 14px;text-align:center">
-                    <p style="font-size:10px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Bu örnekte senin toplam</p>
-                    <p style="font-size:1.1rem;font-weight:700;color:var(--gold-lt)">330 $ / hafta</p>
-                    <p style="font-size:10px;color:var(--muted);margin-top:2px">400 + 100 + 50 + 80 + 60 + 40 → kendi kârın + pasif</p>
+                    <p style="font-size:10px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Haftalık Toplam Hakediş</p>
+                    <p style="font-size:1.1rem;font-weight:700;color:var(--gold-lt)">730 $ / hafta</p>
+                    <p style="font-size:10px;color:var(--muted);margin-top:2px">Kendi kârın (%4) + Portföy payın (%1+%1)</p>
                 </div>
                 <div class="card-gold" style="padding:12px 14px;text-align:center">
-                    <p style="font-size:10px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Kural</p>
-                    <p style="font-size:1rem;font-weight:700;color:var(--text)">Kim getirirse o kazanır</p>
-                    <p style="font-size:10px;color:var(--muted);margin-top:2px">Her kişi kendi zincirinin 2 halkasından %1 alır</p>
+                    <p style="font-size:10px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Liyakat Esaslı Model</p>
+                    <p style="font-size:1rem;font-weight:700;color:var(--text)">Performans Odaklı Dağılım</p>
+                    <p style="font-size:10px;color:var(--muted);margin-top:2px">Her paydaş kendi oluşturduğu dikey hatlardan kazanır</p>
                 </div>
                 <div class="card" style="padding:12px 14px;text-align:center">
-                    <p style="font-size:10px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Sınır</p>
-                    <p style="font-size:1rem;font-weight:700;color:var(--muted2)">Yatay değil dikey</p>
-                    <p style="font-size:10px;color:var(--muted);margin-top:2px">Kaç kişi getirirsen getir — sadece 1 zincir kazandırır</p>
+                    <p style="font-size:10px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Risk Yönetimi</p>
+                    <p style="font-size:1rem;font-weight:700;color:var(--muted2)">Stratejik Derinlik Kontrolü</p>
+                    <p style="font-size:10px;color:var(--muted);margin-top:2px">Sürdürülebilirlik için dikey kademe limitasyonu uygulanır</p>
                 </div>
             </div>
         </div>
@@ -977,21 +1073,18 @@
             <span>Başlamak İçin</span>
         </div>
         <h2 class="section-title" style="font-size:clamp(2rem,4.5vw,3rem);margin-bottom:16px">
-            Sisteme Dahil Olmaya<br>
-            <span style="color:var(--gold-lt)">Hazır mısınız?</span>
+            Finansal Yolculuğunuzu<br>
+            <span style="color:var(--gold-lt)">Stratejiyle Güçlendirin</span>
         </h2>
         <p style="color:var(--muted2);font-size:14px;line-height:1.7;margin-bottom:36px;max-width:400px;margin-left:auto;margin-right:auto">
-            5/24 çalışan Expert Advisor sistemimiz ile finansal özgürlüğünüzü inşa edin. Şeffaf yapı, veriye dayalı strateji.
+            Expert Advisor sistemimizin sunduğu analitik derinlik ve şeffaf hakediş modeliyle tanışmak için ekosistemimize davetlisiniz.
         </p>
         <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:40px">
-            <button style="background:var(--gold);color:#080C14;font-weight:700;padding:12px 32px;border-radius:6px;font-size:14px;border:none;cursor:pointer;font-family:'Inter',sans-serif;letter-spacing:0.3px;transition:opacity 0.2s"
-                onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-                Hemen Başla
-            </button>
-            <button style="background:transparent;color:var(--text);font-weight:600;padding:12px 32px;border-radius:6px;font-size:14px;border:1px solid var(--border2);cursor:pointer;font-family:'Inter',sans-serif;transition:border-color 0.2s"
-                onmouseover="this.style.borderColor='rgba(201,168,76,0.4)'" onmouseout="this.style.borderColor='var(--border2)'">
-                Daha Fazla Bilgi
-            </button>
+            <a href="https://www.centralcopytrade.services/register" target="_blank" rel="noopener"
+               style="display:inline-block;background:var(--gold);color:#080C14;font-weight:700;padding:12px 32px;border-radius:6px;font-size:14px;text-decoration:none;font-family:'DM Sans',sans-serif;letter-spacing:0.3px;transition:opacity 0.2s"
+               onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                Ekosisteme Katıl
+            </a>
         </div>
         <p style="font-size:11px;color:var(--muted);max-width:380px;margin:0 auto;line-height:1.6">
             Bu sunum yatırım tavsiyesi içermez. Tüm finansal kararlar kullanıcının kendi sorumluluğundadır.
